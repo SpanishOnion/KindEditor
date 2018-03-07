@@ -48,10 +48,10 @@ function rmCd(p, c){
 document.getElementById('form').onsubmit = function(e){
     var b = C('ke-edit-iframe').contentWindow.document.body,
         s = b.getElementsByTagName('script'),
-        k = C('ke-script', false, b),
+        k = C('ke-script', true, b),
         h = C('hidden');
     rmCd(b, s);
-    if(k){ rmCd(b, k); }
+    if(k[0]){ rmCd(b, k); }
     h.value = b.innerHTML;
 };
 //KindEditor
@@ -60,11 +60,15 @@ KindEditor.ready(function(K) {
         cssPath : './SyntaxHighlighter/styles/shCoreDefault.css',
         uploadJson : './KindEditor/php/uploadJson.php',
         fileManagerJson : './KindEditor/php/file_manager_json.php',
+        //0禁止粘贴 1纯文本粘贴 2富文本粘贴
+        pasteType : 1,
         allowFileManager : true,
         filterMode : false
     });
+
     var b = C('buttons'), a = C('form-control',true)[4], k = null, h = null, f = C('form-horizontal'),
         s = true, t = getTop(C('ke-container')), c = C('ke-toolbar'), d = true;
+
     b.onclick = function(e){
         e = e || window.event;
         var t = e.target || e.srcElement;
@@ -75,21 +79,50 @@ KindEditor.ready(function(K) {
             h = parseInt(k.style.height) + 600 + 'px';
             k.style.height = h;
             C('ke-edit').style.height = h;
+            C('ke-edit-textarea').style.height = h;
         }else if(hasC(t,'toLow')){
             k = C('ke-edit-iframe');
             h = parseInt(k.style.height) - 600 + 'px';
             k.style.height = h;
             C('ke-edit').style.height = h;
+            C('ke-edit-textarea').style.height = h;
         }else{
             window.scrollTo(0, getTop(f) + f.offsetHeight - document.documentElement.clientHeight);
         }
     };
+
+    //工具栏按钮点击事件
+    c.onclick = function(e) {
+        //获得事件对象
+        e = e || window.event;
+        //获得子元素
+        var t = e.target || e.srcElement;
+        //判断是否点击标题按钮
+        if(t.getAttribute('data-name') === 'titles' || t.parentNode.getAttribute('data-name') === 'titles'){
+            //获得pre标签
+            var p = C('ke-edit-iframe').contentWindow.document.getElementsByTagName('pre'), i = 0,
+                l = p.length,ft = null;
+            //定时器设为0等待所有事件执行完毕后再执行 删除pre标签外面一层的p标签
+            setTimeout(function(){
+                //循环删除
+                for(;i < l;i++){
+                    ft = p[i].parentNode;
+                    //判断外面一层的标签是否为p
+                    if(ft.nodeName === 'P'){
+                        ft.parentNode.replaceChild(p[i], ft);
+                    }
+                }
+            },0);
+        }
+    };
+
     function onScroll(){
         if(s){
             requestAnimationFrame(relFun);
             s = false;
         }
     }
+
     function relFun(){
         if(pageYOffset >= t){
             if(d){
@@ -104,5 +137,6 @@ KindEditor.ready(function(K) {
         }
         s = true;
     }
+
     window.addEventListener('scroll',onScroll,false);
 });
