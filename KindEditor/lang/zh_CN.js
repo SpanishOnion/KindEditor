@@ -34,6 +34,7 @@ KindEditor.lang({
 	forecolor : '文字颜色',
 	hilitecolor : '文字背景',
 	bold : '粗体(Ctrl+B)',
+	titles : '段落标题',
 	italic : '斜体(Ctrl+I)',
 	underline : '下划线(Ctrl+U)',
 	strikethrough : '删除线',

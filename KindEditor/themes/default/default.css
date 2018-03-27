@@ -143,6 +143,11 @@
 	width: 25px;
 	height: 16px;
 }
+.ke-icon-titles {
+	background-position: 0 -336px;
+	width: 16px;
+	height: 16px;
+}
 .ke-icon-fontname {
 	background-position: 0 -352px;
 	width: 21px;
@@ -424,12 +429,11 @@
 }
 /* toolbar */
 .ke-toolbar {
-	border-bottom: 1px solid #CCC;
-	background-color: #F0F0EE;
 	padding: 2px 5px;
 	text-align: left;
 	overflow: hidden;
 	zoom: 1;
+	background-color: rgba(221,233,252,.3);
 }
 .ke-toolbar-icon {
 	background-repeat: no-repeat;
@@ -443,7 +447,7 @@
 	background-image: url(default.png);
 }
 .ke-toolbar .ke-outline {
-	border: 1px solid #F0F0EE;
+	border: 1px solid transparent;
 	margin: 1px;
 	padding: 1px 2px;
 	font-size: 0;
@@ -1160,4 +1164,7 @@
     top: 136px;
     box-shadow: 0 0 10px #5b5b5b;
     border: 0;
+}
+.tab2 form {
+	display: block;
 }

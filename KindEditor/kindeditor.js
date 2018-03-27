@@ -19,14 +19,14 @@ if (!console.log) {
 }
 var _VERSION = '4.1.10 (2013-11-23)',
 	_ua = navigator.userAgent.toLowerCase(),
-	_IE = _ua.indexOf('msie') > -1 && _ua.indexOf('opera') == -1,
-	_NEWIE = _ua.indexOf('msie') == -1 && _ua.indexOf('trident') > -1,
-	_GECKO = _ua.indexOf('gecko') > -1 && _ua.indexOf('khtml') == -1,
+	_IE = _ua.indexOf('msie') > -1 && _ua.indexOf('opera') === -1,
+	_NEWIE = _ua.indexOf('msie') === -1 && _ua.indexOf('trident') > -1,
+	_GECKO = _ua.indexOf('gecko') > -1 && _ua.indexOf('khtml') === -1,
 	_WEBKIT = _ua.indexOf('applewebkit') > -1,
 	_OPERA = _ua.indexOf('opera') > -1,
 	_MOBILE = _ua.indexOf('mobile') > -1,
 	_IOS = /ipad|iphone|ipod/.test(_ua),
-	_QUIRKS = document.compatMode != 'CSS1Compat',
+	_QUIRKS = document.compatMode !== 'CSS1Compat',
 	_IERANGE = !window.getSelection,
 	_matches = /(?:msie|firefox|webkit|opera)[\/:\s](\d+)/.exec(_ua),
 	_V = _matches ? _matches[1] : '0',
@@ -242,7 +242,7 @@ K.options = {
 	newlineTag : 'p',
 	resizeType : 2,
 	syncType : 'form',
-	pasteType : 2,
+	pasteType : 1,
 	dialogAlignType : 'page',
 	useContextmenu : true,
 	fullscreenShortcut : false,
@@ -256,10 +256,10 @@ K.options = {
 	zIndex : 811213,
     items : [
         'source', '|', 'code', '|',
-        'fontsize', 'forecolor', 'bold', '|',
+        'fontsize', 'forecolor', 'bold', 'titles', '|',
         'image', 'multiimage', 'link', '|',
         'fontname', 'italic', 'underline', 'strikethrough', '|',
-        'flash', 'media', 'insertfile', 'table', 'hr', 'baidumap', 'pagebreak', 'anchor', '|',
+        'flash', 'media', 'insertfile', 'table', 'hr', 'baidumap', 'anchor', '|',
         'selectall', 'undo', 'redo'
     ],
 	noDisableItems : ['source', 'fullscreen'],
@@ -352,7 +352,7 @@ _extend(KEvent, {
 		if (!self.relatedTarget && self.fromElement) {
 			self.relatedTarget = self.fromElement === self.target ? self.toElement : self.fromElement;
 		}
-		if (self.pageX == null && self.clientX != null) {
+		if (self.pageX === null && self.clientX !== null) {
 			var d = doc.documentElement, body = doc.body;
 			self.pageX = self.clientX + (d && d.scrollLeft || body && body.scrollLeft || 0) - (d && d.clientLeft || body && body.clientLeft || 0);
 			self.pageY = self.clientY + (d && d.scrollTop  || body && body.scrollTop  || 0) - (d && d.clientTop  || body && body.clientTop  || 0);
@@ -482,7 +482,7 @@ function _unbind(el, type, fn) {
 	if (type === undefined) {
 		if (id in _eventData) {
 			_each(_eventData[id], function(key, events) {
-				if (key != 'el' && events.length > 0) {
+				if (key !== 'el' && events.length > 0) {
 					_unbindEvent(el, key, events[0]);
 				}
 			});
@@ -505,7 +505,7 @@ function _unbind(el, type, fn) {
 					events.splice(i, 1);
 				}
 			});
-			if (events.length == 1) {
+			if (events.length === 1) {
 				_unbindEvent(el, type, events[0]);
 				delete _eventData[id][type];
 			}
@@ -540,7 +540,7 @@ function _ctrl(el, key, fn) {
 	var self = this;
 	key = /^\d{2,}$/.test(key) ? key : key.toUpperCase().charCodeAt(0);
 	_bind(el, 'keydown', function(e) {
-		if (e.ctrlKey && e.which == key && !e.shiftKey && !e.altKey) {
+		if (e.ctrlKey && e.which === key && !e.shiftKey && !e.altKey) {
 			fn.call(el);
 			e.stop();
 		}
@@ -582,7 +582,7 @@ function _ready(fn) {
 		_bind(document, 'readystatechange', ieReadyStateFunc);
 		var toplevel = false;
 		try {
-			toplevel = window.frameElement == null;
+			toplevel = window.frameElement === null;
 		} catch(e) {}
 		if (document.documentElement.doScroll && toplevel) {
 			ieReadyFunc();
@@ -646,7 +646,7 @@ function _formatCss(css) {
 }
 function _formatUrl(url, mode, host, pathname) {
 	mode = _undef(mode, '').toLowerCase();
-	if (url.substr(0, 5) != 'data:') {
+	if (url.substr(0, 5) !== 'data:') {
 		url = url.replace(/([^:])\/\//g, '$1/');
 	}
 	if (_inArray(mode, ['absolute', 'relative', 'domain']) < 0) {
@@ -669,11 +669,11 @@ function _formatUrl(url, mode, host, pathname) {
 		var parts = path.split('/'), paths = [];
 		for (var i = 0, len = parts.length; i < len; i++) {
 			var part = parts[i];
-			if (part == '..') {
+			if (part === '..') {
 				if (paths.length > 0) {
 					paths.pop();
 				}
-			} else if (part !== '' && part != '.') {
+			} else if (part !== '' && part !== '.') {
 				paths.push(part);
 			}
 		}
@@ -694,7 +694,7 @@ function _formatUrl(url, mode, host, pathname) {
 			if (arr.length > 0) {
 				prefix += '/' + arr.join('/');
 			}
-			if (pathname == '/') {
+			if (pathname === '/') {
 				prefix += '/';
 			}
 			return prefix + url.substr(path.length);
@@ -714,7 +714,7 @@ function _formatUrl(url, mode, host, pathname) {
 	return url;
 }
 function _formatHtml(html, htmlTags, urlType, wellFormatted, indentChar) {
-	if (html == null) {
+	if (html === null) {
 		html = '';
 	}
 	urlType = urlType || '';
@@ -725,7 +725,7 @@ function _formatHtml(html, htmlTags, urlType, wellFormatted, indentChar) {
 		return $1 + $2.replace(/<(?:br|br\s[^>]*)>/ig, '\n') + $3;
 	});
 	html = html.replace(/<(?:br|br\s[^>]*)\s*\/?>\s*<\/p>/ig, '</p>');
-	html = html.replace(/(<(?:p|p\s[^>]*)>)\s*(<\/p>)/ig, '$1<br />$2');
+	html = html.replace(/(<(?:p|p\s[^>]*)>)\s*(<\/p>)/ig, '$1<br>$2');
 	html = html.replace(/\u200B/g, '');
 	html = html.replace(/\u00A9/g, '&copy;');
 	html = html.replace(/\u00AE/g, '&reg;');
@@ -779,7 +779,7 @@ function _formatHtml(html, htmlTags, urlType, wellFormatted, indentChar) {
 				startNewline = '\n';
 			}
 		}
-		if (wellFormatted && tagName == 'br') {
+		if (wellFormatted && tagName === 'br') {
 			endNewline = '\n';
 		}
 		if (_BLOCK_TAG_MAP[tagName] && !_PRE_TAG_MAP[tagName]) {
@@ -950,7 +950,7 @@ function _mediaImg(blankPath, attrs) {
 	if (style !== '') {
 		html += 'style="' + style + '" ';
 	}
-	html += 'data-ke-tag="' + escape(srcTag) + '" alt="" />';
+	html += 'data-ke-tag="' + escape(srcTag) + '" alt="">';
 	return html;
 }
 function _tmpl(str, data) {
@@ -977,11 +977,11 @@ K.mediaImg = _mediaImg;
 K.clearMsWord = _clearMsWord;
 K.tmpl = _tmpl;
 function _contains(nodeA, nodeB) {
-	if (nodeA.nodeType == 9 && nodeB.nodeType != 9) {
+	if (nodeA.nodeType === 9 && nodeB.nodeType !== 9) {
 		return true;
 	}
 	while ((nodeB = nodeB.parentNode)) {
-		if (nodeB == nodeA) {
+		if (nodeB === nodeA) {
 			return true;
 		}
 	}
@@ -993,7 +993,7 @@ var _GET_SET_ATTRIBUTE = _getSetAttrDiv.className !== 't';
 function _getAttr(el, key) {
 	key = key.toLowerCase();
 	var val = null;
-	if (!_GET_SET_ATTRIBUTE && el.nodeName.toLowerCase() != 'script') {
+	if (!_GET_SET_ATTRIBUTE && el.nodeName.toLowerCase() !== 'script') {
 		var div = el.ownerDocument.createElement('div');
 		div.appendChild(el.cloneNode(false));
 		var list = _getAttrList(_unescape(div.innerHTML));
@@ -1027,7 +1027,7 @@ function _queryAll(expr, root) {
 	}
 	root = root || document;
 	function escape(str) {
-		if (typeof str != 'string') {
+		if (typeof str !== 'string') {
 			return str;
 		}
 		return str.replace(/([^\w\-])/g, '\\$1');
@@ -1072,7 +1072,7 @@ function _queryAll(expr, root) {
 			className = ' ' + className + ' ';
 			for (i = 0, len = els.length; i < len; i++) {
 				el = els[i];
-				if (el.nodeType == 1) {
+				if (el.nodeType === 1) {
 					var cls = el.className;
 					if (cls && (' ' + cls + ' ').indexOf(className) > -1) {
 						arr.push(el);
@@ -1099,7 +1099,7 @@ function _queryAll(expr, root) {
 		var arr = [], els = root.getElementsByTagName(tag), el;
 		for (var i = 0, len = els.length; i < len; i++) {
 			el = els[i];
-			if (el.nodeType == 1) {
+			if (el.nodeType === 1) {
 				if (val === null) {
 					if (_getAttr(el, key) !== null) {
 						arr.push(el);
@@ -1138,7 +1138,7 @@ function _queryAll(expr, root) {
 			var els = root.getElementsByTagName(tag), el;
 			for (var i = 0, len = els.length; i < len; i++) {
 				el = els[i];
-				if (el.nodeType == 1) {
+				if (el.nodeType === 1) {
 					arr.push(el);
 				}
 			}
@@ -1152,7 +1152,7 @@ function _queryAll(expr, root) {
 		}
 	}
 	var results = [];
-	if (parts.length == 1) {
+	if (parts.length === 1) {
 		return select(parts[0], root);
 	}
 	var isChild = false, part, els, subResults, val, v, i, j, k, length, len, l;
@@ -1211,7 +1211,7 @@ function _getWin(node) {
 	return doc.parentWindow || doc.defaultView;
 }
 function _setHtml(el, html) {
-	if (el.nodeType != 1) {
+	if (el.nodeType !== 1) {
 		return;
 	}
 	var doc = _getDoc(el);
@@ -1230,13 +1230,13 @@ function _hasClass(el, cls) {
 	return _inString(cls, el.className, ' ');
 }
 function _setAttr(el, key, val) {
-	if (_IE && _V < 8 && key.toLowerCase() == 'class') {
+	if (_IE && _V < 8 && key.toLowerCase() === 'class') {
 		key = 'className';
 	}
 	el.setAttribute(key, '' + val);
 }
 function _removeAttr(el, key) {
-	if (_IE && _V < 8 && key.toLowerCase() == 'class') {
+	if (_IE && _V < 8 && key.toLowerCase() === 'class') {
 		key = 'className';
 	}
 	_setAttr(el, key, '');
@@ -1402,7 +1402,7 @@ _extend(KNode, {
 	html : function(val) {
 		var self = this;
 		if (val === undefined) {
-			if (self.length < 1 || self.type != 1) {
+			if (self.length < 1 || self.type !== 1) {
 				return '';
 			}
 			return _formatHtml(self[0].innerHTML);
@@ -1488,9 +1488,9 @@ _extend(KNode, {
 	opacity : function(val) {
 		this.each(function() {
 			if (this.style.opacity === undefined) {
-				this.style.filter = val == 1 ? '' : 'alpha(opacity=' + (val * 100) + ')';
+				this.style.filter = val === 1 ? '' : 'alpha(opacity=' + (val * 100) + ')';
 			} else {
-				this.style.opacity = val == 1 ? '' : val;
+				this.style.opacity = val === 1 ? '' : val;
 			}
 		});
 		return this;
@@ -1614,7 +1614,7 @@ _extend(KNode, {
 		if (val === undefined) {
 			val = self._originDisplay || '';
 		}
-		if (self.css('display') != 'none') {
+		if (self.css('display') !== 'none') {
 			return self;
 		}
 		return self.css('display', val);
@@ -1672,7 +1672,7 @@ _extend(KNode, {
 		}
 		var list = [], child = this[0].firstChild;
 		while (child) {
-			if (child.nodeType != 3 || _trim(child.nodeValue) !== '') {
+			if (child.nodeType !== 3 || _trim(child.nodeValue) !== '') {
 				list.push(child);
 			}
 			child = child.nextSibling;
@@ -1763,10 +1763,10 @@ K = function(expr, root) {
 		if (expr.length !== length || /<.+>/.test(expr)) {
 			var doc = root ? root.ownerDocument || root : document,
 				div = doc.createElement('div'), list = [];
-			div.innerHTML = '<img id="__kindeditor_temp_tag__" width="0" height="0" style="display:none;" />' + expr;
+			div.innerHTML = '<img id="__kindeditor_temp_tag__" width="0" height="0" style="display:none;">' + expr;
 			for (var i = 0, len = div.childNodes.length; i < len; i++) {
 				var child = div.childNodes[i];
-				if (child.id == '__kindeditor_temp_tag__') {
+				if (child.id === '__kindeditor_temp_tag__') {
 					continue;
 				}
 				list.push(child);
@@ -1843,7 +1843,7 @@ function _copyAndDelete(range, isCopy, isDelete) {
 	var copyRange = range.cloneRange().down();
 	var start = -1, incStart = -1, incEnd = -1, end = -1,
 		ancestor = range.commonAncestor(), frag = doc.createDocumentFragment();
-	if (ancestor.nodeType == 3) {
+	if (ancestor.nodeType === 3) {
 		var textNode = splitTextNode(ancestor, range.startOffset, range.endOffset);
 		if (isCopy) {
 			frag.appendChild(textNode);
@@ -1870,7 +1870,7 @@ function _copyAndDelete(range, isCopy, isDelete) {
 			}
 			nextNode = node.nextSibling;
 			if (start > 0) {
-				if (node.nodeType == 1) {
+				if (node.nodeType === 1) {
 					if (incStart >= 0 && incEnd <= 0) {
 						if (isCopy) {
 							frag.appendChild(node.cloneNode(true));
@@ -1888,11 +1888,11 @@ function _copyAndDelete(range, isCopy, isDelete) {
 							return false;
 						}
 					}
-				} else if (node.nodeType == 3) {
+				} else if (node.nodeType === 3) {
 					var textNode;
-					if (node == copyRange.startContainer) {
+					if (node === copyRange.startContainer) {
 						textNode = splitTextNode(node, copyRange.startOffset, node.nodeValue.length);
-					} else if (node == copyRange.endContainer) {
+					} else if (node === copyRange.endContainer) {
 						textNode = splitTextNode(node, 0, copyRange.endOffset);
 					} else {
 						textNode = splitTextNode(node, 0, node.nodeValue.length);
@@ -1923,7 +1923,7 @@ function _moveToElementText(range, el) {
 	var node = el;
 	while (node) {
 		var knode = K(node);
-		if (knode.name == 'marquee' || knode.name == 'select') {
+		if (knode.name === 'marquee' || knode.name === 'select') {
 			return;
 		}
 		node = node.parentNode;
@@ -1950,7 +1950,7 @@ function _getStartEnd(rng, isStart) {
 		if (cmp === 0) {
 			return {node: node.parentNode, offset: i};
 		}
-		if (node.nodeType == 1) {
+		if (node.nodeType === 1) {
 			var nodeRange = rng.duplicate(), dummy, knode = K(node), newNode = node;
 			if (knode.isControl()) {
 				dummy = doc.createElement('span');
@@ -1968,7 +1968,7 @@ function _getStartEnd(rng, isStart) {
 			if (dummy) {
 				K(dummy).remove();
 			}
-		} else if (node.nodeType == 3) {
+		} else if (node.nodeType === 3) {
 			testRange.moveStart('character', node.nodeValue.length);
 			startPos += node.nodeValue.length;
 		}
@@ -1976,11 +1976,11 @@ function _getStartEnd(rng, isStart) {
 			startNode = node;
 		}
 	}
-	if (cmp < 0 && startNode.nodeType == 1) {
+	if (cmp < 0 && startNode.nodeType === 1) {
 		return {node: parent, offset: K(parent.lastChild).index() + 1};
 	}
 	if (cmp > 0) {
-		while (startNode.nextSibling && startNode.nodeType == 1) {
+		while (startNode.nextSibling && startNode.nodeType === 1) {
 			startNode = startNode.nextSibling;
 		}
 	}
@@ -1988,9 +1988,9 @@ function _getStartEnd(rng, isStart) {
 	_moveToElementText(testRange, parent);
 	testRange.setEndPoint('StartToEnd', pointRange);
 	startPos -= testRange.text.replace(/\r\n|\n|\r/g, '').length;
-	if (cmp > 0 && startNode.nodeType == 3) {
+	if (cmp > 0 && startNode.nodeType === 3) {
 		var prevNode = startNode.previousSibling;
-		while (prevNode && prevNode.nodeType == 3) {
+		while (prevNode && prevNode.nodeType === 3) {
 			startPos -= prevNode.nodeValue.length;
 			prevNode = prevNode.previousSibling;
 		}
@@ -2000,11 +2000,11 @@ function _getStartEnd(rng, isStart) {
 function _getEndRange(node, offset) {
 	var doc = node.ownerDocument || node,
 		range = doc.body.createTextRange();
-	if (doc == node) {
+	if (doc === node) {
 		range.collapse(true);
 		return range;
 	}
-	if (node.nodeType == 1 && node.childNodes.length > 0) {
+	if (node.nodeType === 1 && node.childNodes.length > 0) {
 		var children = node.childNodes, isStart, child;
 		if (offset === 0) {
 			child = children[0];
@@ -2026,7 +2026,7 @@ function _getEndRange(node, offset) {
 			range.collapse(isStart);
 			return range;
 		}
-		if (child.nodeType == 1) {
+		if (child.nodeType === 1) {
 			var kchild = K(child), span;
 			if (kchild.isControl()) {
 				span = doc.createElement('span');
@@ -2057,7 +2057,7 @@ function _getEndRange(node, offset) {
 function _toRange(rng) {
 	var doc, range;
 	function tr2td(start) {
-		if (K(start.node).name == 'tr') {
+		if (K(start.node).name === 'tr') {
 			start.node = start.node.cells[start.offset];
 			start.offset = 0;
 		}
@@ -2157,7 +2157,7 @@ _extend(KRange, {
 	},
 	selectNodeContents : function(node) {
 		var knode = K(node);
-		if (knode.type == 3 || knode.isSingle()) {
+		if (knode.type === 3 || knode.isSingle()) {
 			return this.selectNode(node);
 		}
 		var children = knode.children();
@@ -2257,7 +2257,7 @@ _extend(KRange, {
 			lastChild = node.lastChild;
 			nodeCount = node.childNodes.length;
 		}
-		if (sc.nodeType == 1) {
+		if (sc.nodeType === 1) {
 			c = sc.childNodes[so];
 			if (c) {
 				sc.insertBefore(node, c);
@@ -2267,7 +2267,7 @@ _extend(KRange, {
 			} else {
 				sc.appendChild(node);
 			}
-		} else if (sc.nodeType == 3) {
+		} else if (sc.nodeType === 3) {
 			if (so === 0) {
 				sc.parentNode.insertBefore(node, sc);
 				if (sc.parentNode === ec) {
@@ -2310,7 +2310,7 @@ _extend(KRange, {
 		var self = this,
 			sc = self.startContainer, so = self.startOffset,
 			ec = self.endContainer, eo = self.endOffset, rng;
-		return sc.nodeType == 1 && sc === ec && so + 1 === eo && K(sc.childNodes[so]).isControl();
+		return sc.nodeType === 1 && sc === ec && so + 1 === eo && K(sc.childNodes[so]).isControl();
 	},
 	get : function(hasControlRange) {
 		var self = this, doc = self.doc, node, rng;
@@ -2339,7 +2339,7 @@ _extend(KRange, {
 	down : function() {
 		var self = this;
 		function downPos(node, pos, isStart) {
-			if (node.nodeType != 1) {
+			if (node.nodeType !== 1) {
 				return;
 			}
 			var children = K(node).children();
@@ -2353,11 +2353,11 @@ _extend(KRange, {
 			if (pos < children.length) {
 				right = children.eq(pos);
 			}
-			if (left && left.type == 3) {
+			if (left && left.type === 3) {
 				child = left[0];
 				offset = child.nodeValue.length;
 			}
-			if (right && right.type == 3) {
+			if (right && right.type === 3) {
 				child = right[0];
 				offset = 0;
 			}
@@ -2377,7 +2377,7 @@ _extend(KRange, {
 	up : function() {
 		var self = this;
 		function upPos(node, pos, isStart) {
-			if (node.nodeType != 3) {
+			if (node.nodeType !== 3) {
 				return;
 			}
 			if (pos === 0) {
@@ -2386,7 +2386,7 @@ _extend(KRange, {
 				} else {
 					self.setEndBefore(node);
 				}
-			} else if (pos == node.nodeValue.length) {
+			} else if (pos === node.nodeValue.length) {
 				if (isStart) {
 					self.setStartAfter(node);
 				} else {
@@ -2403,7 +2403,7 @@ _extend(KRange, {
 		self.up();
 		function enlargePos(node, pos, isStart) {
 			var knode = K(node), parent;
-			if (knode.type == 3 || _NOSPLIT_TAG_MAP[knode.name] || !toBlock && knode.isBlock()) {
+			if (knode.type === 3 || _NOSPLIT_TAG_MAP[knode.name] || !toBlock && knode.isBlock()) {
 				return;
 			}
 			if (pos === 0) {
@@ -2419,7 +2419,7 @@ _extend(KRange, {
 				} else {
 					self.setEndBefore(knode[0]);
 				}
-			} else if (pos == knode.children().length) {
+			} else if (pos === knode.children().length) {
 				while (!knode.next()) {
 					parent = knode.parent();
 					if (!parent || _NOSPLIT_TAG_MAP[parent.name] || !toBlock && parent.isBlock()) {
@@ -2440,13 +2440,13 @@ _extend(KRange, {
 	},
 	shrink : function() {
 		var self = this, child, collapsed = self.collapsed;
-		while (self.startContainer.nodeType == 1 && (child = self.startContainer.childNodes[self.startOffset]) && child.nodeType == 1 && !K(child).isSingle()) {
+		while (self.startContainer.nodeType === 1 && (child = self.startContainer.childNodes[self.startOffset]) && child.nodeType === 1 && !K(child).isSingle()) {
 			self.setStart(child, 0);
 		}
 		if (collapsed) {
 			return self.collapse(collapsed);
 		}
-		while (self.endContainer.nodeType == 1 && self.endOffset > 0 && (child = self.endContainer.childNodes[self.endOffset - 1]) && child.nodeType == 1 && !K(child).isSingle()) {
+		while (self.endContainer.nodeType === 1 && self.endOffset > 0 && (child = self.endContainer.childNodes[self.endOffset - 1]) && child.nodeType === 1 && !K(child).isSingle()) {
 			self.setEnd(child, child.childNodes.length);
 		}
 		return self;
@@ -2486,8 +2486,8 @@ _extend(KRange, {
 	},
 	dump : function() {
 		console.log('--------------------');
-		console.log(this.startContainer.nodeType == 3 ? this.startContainer.nodeValue : this.startContainer, this.startOffset);
-		console.log(this.endContainer.nodeType == 3 ? this.endContainer.nodeValue : this.endContainer, this.endOffset);
+		console.log(this.startContainer.nodeType === 3 ? this.startContainer.nodeValue : this.startContainer, this.startOffset);
+		console.log(this.endContainer.nodeType === 3 ? this.endContainer.nodeValue : this.endContainer, this.endOffset);
 	}
 });
 function _range(mixed) {
@@ -2578,7 +2578,7 @@ function _hasAttrOrCssByKey(knode, map, mapKey) {
 	return false;
 }
 function _removeAttrOrCss(knode, map) {
-	if (knode.type != 1) {
+	if (knode.type !== 1) {
 		return;
 	}
 	_removeAttrOrCssByKey(knode, map, '*');
@@ -2623,7 +2623,7 @@ function _getInnerNode(knode) {
 	return inner;
 }
 function _isEmptyNode(knode) {
-	if (knode.type != 1 || knode.isSingle()) {
+	if (knode.type !== 1 || knode.isSingle()) {
 		return false;
 	}
 	return knode.html().replace(/<[^>]+>/g, '') === '';
@@ -2649,13 +2649,13 @@ function _mergeWrapper(a, b) {
 }
 function _wrapNode(knode, wrapper) {
 	wrapper = wrapper.clone(true);
-	if (knode.type == 3) {
+	if (knode.type === 3) {
 		_getInnerNode(wrapper).append(knode.clone(false));
 		knode.replaceWith(wrapper);
 		return wrapper;
 	}
 	var nodeWrapper = knode, child;
-	while ((child = knode.first()) && child.children().length == 1) {
+	while ((child = knode.first()) && child.children().length === 1) {
 		knode = child;
 	}
 	child = knode.first();
@@ -2682,8 +2682,8 @@ function _mergeAttrs(knode, attrs, styles) {
 	});
 }
 function _inPreElement(knode) {
-	while (knode && knode.name != 'body') {
-		if (_PRE_TAG_MAP[knode.name] || knode.name == 'div' && knode.hasClass('ke-script')) {
+	while (knode && knode.name !== 'body') {
+		if (_PRE_TAG_MAP[knode.name] || knode.name === 'div' && knode.hasClass('ke-script')) {
 			return true;
 		}
 		knode = knode.parent();
@@ -2706,7 +2706,7 @@ _extend(KCmd, {
 		self.sel = _getSel(doc);
 		if (rng) {
 			self.range = _range(rng);
-			if (K(self.range.startContainer).name == 'html') {
+			if (K(self.range.startContainer).name === 'html') {
 				self.range.selectNodeContents(doc.body).collapse(false);
 			}
 			return self;
@@ -2722,7 +2722,7 @@ _extend(KCmd, {
 			sc = range.startContainer, so = range.startOffset,
 			ec = range.endContainer, eo = range.endOffset,
 			doc = _getDoc(sc), win = self.win, rng, hasU200b = false;
-		if (hasDummy && sc.nodeType == 1 && range.collapsed) {
+		if (hasDummy && sc.nodeType === 1 && range.collapsed) {
 			if (_IERANGE) {
 				var dummy = K('<span>&nbsp;</span>', doc);
 				range.insertNode(dummy[0]);
@@ -2784,21 +2784,21 @@ _extend(KCmd, {
 		range.enlarge();
 		var bookmark = range.createBookmark(), ancestor = range.commonAncestor(), isStart = false;
 		K(ancestor).scan(function(node) {
-			if (!isStart && node == bookmark.start) {
+			if (!isStart && node === bookmark.start) {
 				isStart = true;
 				return;
 			}
 			if (isStart) {
-				if (node == bookmark.end) {
+				if (node === bookmark.end) {
 					return false;
 				}
 				var knode = K(node);
 				if (_inPreElement(knode)) {
 					return;
 				}
-				if (knode.type == 3 && _trim(node.nodeValue).length > 0) {
+				if (knode.type === 3 && _trim(node.nodeValue).length > 0) {
 					var parent;
-					while ((parent = knode.parent()) && parent.isStyle() && parent.children().length == 1) {
+					while ((parent = knode.parent()) && parent.isStyle() && parent.children().length === 1) {
 						knode = parent;
 					}
 					_wrapNode(knode, wrapper);
@@ -2812,7 +2812,7 @@ _extend(KCmd, {
 		var range = this.range, doc = range.doc;
 		var tempRange = range.cloneRange().collapse(isStart);
 		var node = tempRange.startContainer, pos = tempRange.startOffset,
-			parent = node.nodeType == 3 ? node.parentNode : node,
+			parent = node.nodeType === 3 ? node.parentNode : node,
 			needSplit = false, knode;
 		while (parent && parent.parentNode) {
 			knode = K(parent);
@@ -2849,9 +2849,9 @@ _extend(KCmd, {
 				range.setStartBefore(dummy).setEndBefore(first);
 			}
 			var dummyParent = dummy.parentNode;
-			if (dummyParent == range.endContainer) {
+			if (dummyParent === range.endContainer) {
 				var prev = K(dummy).prev(), next = K(dummy).next();
-				if (prev && next && prev.type == 3 && next.type == 3) {
+				if (prev && next && prev.type === 3 && next.type === 3) {
 					range.setEnd(prev[0], prev[0].nodeValue.length);
 				} else if (!isStart) {
 					range.setEnd(range.endContainer, range.endOffset - 1);
@@ -2866,7 +2866,7 @@ _extend(KCmd, {
 		range.enlarge();
 		if (range.startOffset === 0) {
 			var ksc = K(range.startContainer), parent;
-			while ((parent = ksc.parent()) && parent.isStyle() && parent.children().length == 1) {
+			while ((parent = ksc.parent()) && parent.isStyle() && parent.children().length === 1) {
 				ksc = parent;
 			}
 			range.setStart(ksc[0], 0);
@@ -2909,11 +2909,11 @@ _extend(KCmd, {
 		range.cloneRange().collapse(true).insertNode(startDummy);
 		var nodeList = [], cmpStart = false;
 		K(range.commonAncestor()).scan(function(node) {
-			if (!cmpStart && node == startDummy) {
+			if (!cmpStart && node === startDummy) {
 				cmpStart = true;
 				return;
 			}
-			if (node == endDummy) {
+			if (node === endDummy) {
 				return false;
 			}
 			if (cmpStart) {
@@ -2930,14 +2930,14 @@ _extend(KCmd, {
 			if (startBefore && _isEmptyNode(startBefore)) {
 				startBefore.remove();
 				range.setStart(sc, so - 1);
-				if (sc == ec) {
+				if (sc === ec) {
 					range.setEnd(ec, eo - 1);
 				}
 			}
 			var startAfter = K(sc.childNodes[so]);
 			if (startAfter && _isEmptyNode(startAfter)) {
 				startAfter.remove();
-				if (sc == ec) {
+				if (sc === ec) {
 					range.setEnd(ec, eo - 1);
 				}
 			}
@@ -2956,7 +2956,7 @@ _extend(KCmd, {
 	commonNode : function(map) {
 		var range = this.range;
 		var ec = range.endContainer, eo = range.endOffset,
-			node = (ec.nodeType == 3 || eo === 0) ? ec : ec.childNodes[eo - 1];
+			node = (ec.nodeType === 3 || eo === 0) ? ec : ec.childNodes[eo - 1];
 		function find(node) {
 			var child = node, parent = node;
 			while (parent) {
@@ -2976,7 +2976,7 @@ _extend(KCmd, {
 		if (cNode) {
 			return cNode;
 		}
-		if (node.nodeType == 1 || (ec.nodeType == 3 && eo === 0)) {
+		if (node.nodeType === 1 || (ec.nodeType === 3 && eo === 0)) {
 			var prev = K(node).prev();
 			if (prev) {
 				return find(prev);
@@ -2988,11 +2988,11 @@ _extend(KCmd, {
 		var range = this.range,
 			sc = range.startContainer, so = range.startOffset,
 			ec = range.endContainer, eo = range.endOffset,
-			startNode = (sc.nodeType == 3 || so === 0) ? sc : sc.childNodes[so - 1],
-			endNode = (ec.nodeType == 3 || eo === 0) ? ec : ec.childNodes[eo - 1];
+			startNode = (sc.nodeType === 3 || so === 0) ? sc : sc.childNodes[so - 1],
+			endNode = (ec.nodeType === 3 || eo === 0) ? ec : ec.childNodes[eo - 1];
 		function find(node) {
 			while (node) {
-				if (node.nodeType == 1) {
+				if (node.nodeType === 1) {
 					if (node.tagName.toLowerCase() === tagName) {
 						return node;
 					}
@@ -3086,6 +3086,9 @@ _extend(KCmd, {
 			b : '*'
 		});
 	},
+    titles : function() {
+        return this.toggle('<pre></pre>');
+    },
 	italic : function() {
 		return this.toggle('<em></em>', {
 			span : '.font-style=italic',
@@ -3137,7 +3140,7 @@ _extend(KCmd, {
 			return self;
 		}
 		function pasteHtml(range, val) {
-			val = '<img id="__kindeditor_temp_tag__" width="0" height="0" style="display:none;" />' + val;
+			val = '<img id="__kindeditor_temp_tag__" width="0" height="0" style="display:none;">' + val;
 			var rng = range.get();
 			if (rng.item) {
 				rng.item(0).outerHTML = val;
@@ -3196,8 +3199,8 @@ _extend(KCmd, {
 		if (align) {
 			html += 'align="' + _escape(align) + '" ';
 		}
-		html += 'alt="' + _escape(title) + '" ';
-		html += '/>';
+		html += 'alt="' + _escape(title) + '"';
+		html += '>';
 		return this.inserthtml(html);
 	},
 	createlink : function(url, type) {
@@ -3234,9 +3237,9 @@ _extend(KCmd, {
 		}
 		var sc = range.startContainer, so = range.startOffset,
 			ec = range.endContainer, eo = range.endOffset;
-		if (sc.nodeType == 1 && sc === ec && so + 1 === eo) {
+		if (sc.nodeType === 1 && sc === ec && so + 1 === eo) {
 			var child = sc.childNodes[so];
-			if (child.nodeName.toLowerCase() == 'a') {
+			if (child.nodeName.toLowerCase() === 'a') {
 				setAttr(child, url, type);
 				return self;
 			}
@@ -3597,8 +3600,18 @@ function _getInitHtml(themesPath, bodyClass, cssPath, cssData) {
                 '        height: 19px !important;',
                 '    }',
                 '}',
+                'pre{' +
+                '    font-size: 20px;' +
+                '    font-weight: bolder;' +
+                '    padding:10px;' +
+                '    margin: 0 0 10px;' +
+                '    border:1px solid #ccc;' +
+                '    border-radius:4px;' +
+                '    background-color:#FFFFFF;' +
+                '    box-shadow:0 0 10px #ccc;' +
+                '}',
                 '</style>'
-            ]);
+            ])
         }
     });
 	if (cssData) {
@@ -3606,8 +3619,11 @@ function _getInitHtml(themesPath, bodyClass, cssPath, cssData) {
 	}
     var str = '<script src="./SyntaxHighlighter/scripts/0.js"></script>' +
 		      '<script src="./SyntaxHighlighter/scripts/shCore.js"></script>' +
+		      '<script src="./SyntaxHighlighter/scripts/shBrushXml.js"></script>' +
               '<script src="./SyntaxHighlighter/scripts/shBrushJScript.js"></script>' +
               '<script src="./SyntaxHighlighter/scripts/shBrushPhp.js"></script>' +
+			  '<script src="./SyntaxHighlighter/scripts/shBrushSql.js"></script>' +
+        	  '<script src="./SyntaxHighlighter/scripts/shBrushCss.js"></script>' +
               '<script>SyntaxHighlighter.all();</script>';
     arr.push('</head><body ' + (bodyClass ? 'class="' + bodyClass + '"' : '') + '>' + str + '</body></html>');
 	return arr.join('\n');
@@ -3640,7 +3656,7 @@ _extend(KEdit, KWidget, {
 			bodyClass = options.bodyClass,
 			cssPath = options.cssPath,
 			cssData = options.cssData,
-			isDocumentDomain = location.protocol != 'res:' && location.host.replace(/:\d+/, '') !== document.domain,
+			isDocumentDomain = location.protocol !== 'res:' && location.host.replace(/:\d+/, '') !== document.domain,
 			srcScript = ('document.open();' +
 				(isDocumentDomain ? 'document.domain="' + document.domain + '";' : '') +
 				'document.close();'),
@@ -3694,7 +3710,7 @@ _extend(KEdit, KWidget, {
 				};
 				K(document).mousedown(self._mousedownHandler);
 				K(doc).keydown(function(e) {
-					if (e.which == 8) {
+					if (e.which === 8) {
 						cmd.selection();
 						var rng = cmd.range;
 						if (rng.isControl()) {
@@ -3780,7 +3796,7 @@ _extend(KEdit, KWidget, {
 				if (self.beforeGetHtml) {
 					val = self.beforeGetHtml(val);
 				}
-				if (_GECKO && val == '<br />') {
+				if (_GECKO && val === '<br>') {
 					val = '';
 				}
 				return val;
@@ -4470,17 +4486,17 @@ function _ajax(url, fn, method, param, dataType) {
 	var xhr = window.XMLHttpRequest ? new window.XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
 	xhr.open(method, url, true);
 	xhr.onreadystatechange = function () {
-		if (xhr.readyState == 4 && xhr.status == 200) {
+		if (xhr.readyState === 4 && xhr.status === 200) {
 			if (fn) {
 				var data = _trim(xhr.responseText);
-				if (dataType == 'json') {
+				if (dataType === 'json') {
 					data = _json(data);
 				}
 				fn(data);
 			}
 		}
 	};
-	if (method == 'POST') {
+	if (method === 'POST') {
 		var params = [];
 		_each(param, function(key, val) {
 			params.push(encodeURIComponent(key) + '=' + encodeURIComponent(val));
@@ -4549,7 +4565,7 @@ function _getImageFromRange(range, fn) {
 		return;
 	}
 	var img = K(sc.childNodes[so]);
-	if (!img || img.name != 'img') {
+	if (!img || img.name !== 'img') {
 		return;
 	}
 	if (fn(img)) {
@@ -4571,7 +4587,7 @@ function _bindContextmenuEvent() {
 		}
 		var maxWidth = 0, items = [];
 		_each(self._contextmenus, function() {
-			if (this.title == '-') {
+			if (this.title === '-') {
 				items.push(this);
 				return;
 			}
@@ -4582,15 +4598,15 @@ function _bindContextmenuEvent() {
 				}
 			}
 		});
-		while (items.length > 0 && items[0].title == '-') {
+		while (items.length > 0 && items[0].title === '-') {
 			items.shift();
 		}
-		while (items.length > 0 && items[items.length - 1].title == '-') {
+		while (items.length > 0 && items[items.length - 1].title === '-') {
 			items.pop();
 		}
 		var prevItem = null;
 		_each(items, function(i) {
-			if (this.title == '-' && prevItem.title == '-') {
+			if (this.title === '-' && prevItem.title === '-') {
 				delete items[i];
 			}
 			prevItem = this;
@@ -4636,7 +4652,7 @@ function _bindNewlineEvent() {
 	function getAncestorTagName(range) {
 		var ancestor = K(range.commonAncestor());
 		while (ancestor) {
-			if (ancestor.type == 1 && !ancestor.isStyle()) {
+			if (ancestor.type === 1 && !ancestor.isStyle()) {
 				break;
 			}
 			ancestor = ancestor.parent();
@@ -4644,17 +4660,17 @@ function _bindNewlineEvent() {
 		return ancestor.name;
 	}
 	K(doc).keydown(function(e) {
-		if (e.which != 13 || e.shiftKey || e.ctrlKey || e.altKey) {
+		if (e.which !== 13 || e.shiftKey || e.ctrlKey || e.altKey) {
 			return;
 		}
 		self.cmd.selection();
 		var tagName = getAncestorTagName(self.cmd.range);
-		if (tagName == 'marquee' || tagName == 'select') {
+		if (tagName === 'marquee' || tagName === 'select') {
 			return;
 		}
 		if (newlineTag === 'br' && !brSkipTagMap[tagName]) {
 			e.preventDefault();
-			self.insertHtml('<br />' + (_IE && _V < 9 ? '' : '\u200B'));
+			self.insertHtml('<br>' + (_IE && _V < 9 ? '' : '\u200B'));
 			return;
 		}
 		if (!pSkipTagMap[tagName]) {
@@ -4662,16 +4678,16 @@ function _bindNewlineEvent() {
 		}
 	});
 	K(doc).keyup(function(e) {
-		if (e.which != 13 || e.shiftKey || e.ctrlKey || e.altKey) {
+		if (e.which !== 13 || e.shiftKey || e.ctrlKey || e.altKey) {
 			return;
 		}
-		if (newlineTag == 'br') {
+		if (newlineTag === 'br') {
 			return;
 		}
 		if (_GECKO) {
 			var root = self.cmd.commonAncestor('p');
 			var a = self.cmd.commonAncestor('a');
-			if (a && a.text() == '') {
+			if (a && a.text() === '') {
 				a.remove(true);
 				self.cmd.range.selectNodeContents(root[0]).collapse(true);
 				self.cmd.select();
@@ -4680,7 +4696,7 @@ function _bindNewlineEvent() {
 		}
 		self.cmd.selection();
 		var tagName = getAncestorTagName(self.cmd.range);
-		if (tagName == 'marquee' || tagName == 'select') {
+		if (tagName === 'marquee' || tagName === 'select') {
 			return;
 		}
 		if (!pSkipTagMap[tagName]) {
@@ -4705,7 +4721,7 @@ function _bindNewlineEvent() {
 function _bindTabEvent() {
 	var self = this, doc = self.edit.doc;
 	K(doc).keydown(function(e) {
-		if (e.which == 9) {
+		if (e.which === 9) {
 			e.preventDefault();
 			if (self.afterTab) {
 				self.afterTab.call(self, e);
@@ -4713,7 +4729,7 @@ function _bindTabEvent() {
 			}
 			var cmd = self.cmd, range = cmd.range;
 			range.shrink();
-			if (range.collapsed && range.startContainer.nodeType == 1) {
+			if (range.collapsed && range.startContainer.nodeType === 1) {
 				range.insertNode(K('@&nbsp;', doc)[0]);
 				cmd.select();
 			}
@@ -4883,7 +4899,7 @@ KEditor.prototype = {
 	updateState : function() {
 		var self = this;
 		_each(('justifyleft,justifycenter,justifyright,justifyfull,insertorderedlist,insertunorderedlist,' +
-			'subscript,superscript,bold,italic,underline,strikethrough').split(','), function(i, name) {
+			'subscript,superscript,bold,titles,italic,underline,strikethrough').split(','), function(i, name) {
 			self.cmd.state(name) ? self.toolbar.select(name) : self.toolbar.unselect(name);
 		});
 		return self;
@@ -4968,9 +4984,9 @@ KEditor.prototype = {
 		}
 		var htmlList = [];
 		K.each(self.items, function(i, name) {
-			if (name == '|') {
+			if (name === '|') {
 				htmlList.push('<span class="ke-inline-block ke-separator"></span>');
-			} else if (name == '/') {
+			} else if (name === '/') {
 				htmlList.push('<div class="ke-hr"></div>');
 			} else {
 				htmlList.push('<span class="ke-outline" data-name="' + name + '" title="' + self.lang(name) + '" unselectable="on">');
@@ -5373,7 +5389,7 @@ KEditor.prototype = {
 				}
 			}
 		});
-		if (self.dialogAlignType != 'page') {
+		if (self.dialogAlignType !== 'page') {
 			options.alignEl = self.container;
 		}
 		options.cls = 'ke-dialog-' + self.themeType;
@@ -5463,7 +5479,7 @@ function _create(expr, options) {
 function _eachEditor(expr, fn) {
 	K(expr).each(function(i, el) {
 		K.each(_instances, function(j, editor) {
-			if (editor && editor.srcElement[0] == el) {
+			if (editor && editor.srcElement[0] === el) {
 				fn.call(editor, j);
 				return false;
 			}
@@ -5508,7 +5524,7 @@ K.lang = _lang;
 _plugin('core', function(K) {
 	var self = this,
 		shortcutKeys = {
-			undo : 'Z', redo : 'Y', bold : 'B', italic : 'I', underline : 'U', print : 'P', selectall : 'A'
+			undo : 'Z', redo : 'Y', italic : 'I', underline : 'U', print : 'P', selectall : 'A'
 		};
 	self.afterSetHtml(function() {
 		if (self.options.afterChange) {
@@ -5516,12 +5532,12 @@ _plugin('core', function(K) {
 		}
 	});
 	self.afterCreate(function() {
-		if (self.syncType != 'form') {
+		if (self.syncType !== 'form') {
 			return;
 		}
 		var el = K(self.srcElement), hasForm = false;
 		while ((el = el.parent())) {
-			if (el.name == 'form') {
+			if (el.name === 'form') {
 				hasForm = true;
 				break;
 			}
@@ -5575,7 +5591,7 @@ _plugin('core', function(K) {
 		var loaded = false;
 		self.afterCreate(function() {
 			K(self.edit.doc, self.edit.textarea).keyup(function(e) {
-				if (e.which == 27) {
+				if (e.which === 27) {
 					setTimeout(function() {
 						self.fullscreen();
 					}, 0);
@@ -5616,7 +5632,7 @@ _plugin('core', function(K) {
 			curVal = self.cmd.val('formatblock'),
 			menu = self.createMenu({
 				name : 'formatblock',
-				width : self.langType == 'en' ? 200 : 150
+				width : self.langType === 'en' ? 200 : 150
 			});
 		_each(blocks, function(key, val) {
 			var style = 'font-size:' + heights[key] + 'px;';
@@ -5710,17 +5726,17 @@ _plugin('core', function(K) {
 	};
 	self.plugin.getSelectedFlash = function() {
 		return _getImageFromRange(self.edit.cmd.range, function(img) {
-			return img[0].className == 'ke-flash';
+			return img[0].className === 'ke-flash';
 		});
 	};
 	self.plugin.getSelectedMedia = function() {
 		return _getImageFromRange(self.edit.cmd.range, function(img) {
-			return img[0].className == 'ke-media' || img[0].className == 'ke-rm';
+			return img[0].className === 'ke-media' || img[0].className === 'ke-rm';
 		});
 	};
 	self.plugin.getSelectedAnchor = function() {
 		return _getImageFromRange(self.edit.cmd.range, function(img) {
-			return img[0].className == 'ke-anchor';
+			return img[0].className === 'ke-anchor';
 		});
 	};
 	_each('link,image,flash,media,anchor'.split(','), function(i, name) {
@@ -5736,7 +5752,7 @@ _plugin('core', function(K) {
 				},
 				cond : self.plugin['getSelected' + uName],
 				width : 150,
-				iconClass : val == 'edit' ? 'ke-icon-' + name : undefined
+				iconClass : val === 'edit' ? 'ke-icon-' + name : undefined
 			});
 		});
 		self.addContextmenu({ title : '-' });
@@ -5769,7 +5785,7 @@ _plugin('core', function(K) {
 	self.addContextmenu({ title : '-' });
 	_each(('selectall,justifyleft,justifycenter,justifyright,justifyfull,insertorderedlist,' +
 		'insertunorderedlist,indent,outdent,subscript,superscript,hr,print,' +
-		'bold,italic,underline,strikethrough,removeformat,unlink').split(','), function(i, name) {
+		'bold,titles,italic,underline,strikethrough,removeformat,unlink').split(','), function(i, name) {
 		if (shortcutKeys[name]) {
 			self.afterCreate(function() {
 				_ctrl(this.edit.doc, shortcutKeys[name], function() {
@@ -5790,12 +5806,12 @@ _plugin('core', function(K) {
 			cmd.select();
 			if (_WEBKIT) {
 				K('div.' + cls, div).each(function() {
-					K(this).after('<br />').remove(true);
+					K(this).after('<br>').remove(true);
 				});
 				K('span.Apple-style-span', div).remove(true);
 				K('span.Apple-tab-span', div).remove(true);
 				K('span[style]', div).each(function() {
-					if (K(this).css('white-space') == 'nowrap') {
+					if (K(this).css('white-space') === 'nowrap') {
 						K(this).remove(true);
 					}
 				});
@@ -5825,53 +5841,16 @@ _plugin('core', function(K) {
 				html = html.replace(/<\/p><p[^>]*>/ig, '\n');
 				html = html.replace(/<[^>]+>/g, '');
 				html = html.replace(/ {2}/g, ' &nbsp;');
-				if (self.newlineTag == 'p') {
+				if (self.newlineTag === 'p') {
 					if (/\n/.test(html)) {
-						html = html.replace(/^/, '<p>').replace(/$/, '<br /></p>').replace(/\n/g, '<br /></p><p>');
+						html = html.replace(/^/, '<p>').replace(/$/, '<br></p>').replace(/\n/g, '<br></p><p>');
 					}
 				} else {
-					html = html.replace(/\n/g, '<br />$&');
+					html = html.replace(/\n/g, '<br>$&');
 				}
 			}
 			self.insertHtml(html, true);
 		}
-		K(doc.body).bind('paste', function(e){
-			if (self.pasteType === 0) {
-				e.stop();
-				return;
-			}
-			if (pasting) {
-				return;
-			}
-			pasting = true;
-			K('div.' + cls, doc).remove();
-			cmd = self.cmd.selection();
-			bookmark = cmd.range.createBookmark();
-			div = K('<div class="' + cls + '"></div>', doc).css({
-				position : 'absolute',
-				width : '1px',
-				height : '1px',
-				overflow : 'hidden',
-				left : '-1981px',
-				top : K(bookmark.start).pos().y + 'px',
-				'white-space' : 'nowrap'
-			});
-			K(doc.body).append(div);
-			if (_IE) {
-				var rng = cmd.range.get(true);
-				rng.moveToElementText(div[0]);
-				rng.select();
-				rng.execCommand('paste');
-				e.preventDefault();
-			} else {
-				cmd.range.selectNodeContents(div[0]);
-				cmd.select();
-			}
-			setTimeout(function() {
-				movePastedData();
-				pasting = false;
-			}, 0);
-		});
 	});
 	self.beforeGetHtml(function(html) {
 		if (_IE && _V <= 8) {
@@ -5930,7 +5909,7 @@ _plugin('core', function(K) {
 			html = html.replace(/<input[^>]*>|<(select|button)[^>]*>[\s\S]*?<\/\1>/ig, function(full) {
 				var attrs = _getAttrList(full);
 				var styles = _getCssList(attrs.style || '');
-				if (styles.display == 'none') {
+				if (styles.display === 'none') {
 					return '<div class="ke-display-none" data-ke-input-tag="' + escape(full) + '"></div>';
 				}
 				return full;
@@ -5948,7 +5927,7 @@ _plugin('core', function(K) {
 			if (attrs.href !== undefined) {
 				return full;
 			}
-			return '<img class="ke-anchor" src="' + self.themesPath + 'common/anchor.gif" data-ke-name="' + escape(attrs.name) + '" />';
+			return '<img class="ke-anchor" src="' + self.themesPath + 'common/anchor.gif" data-ke-name="' + escape(attrs.name) + '">';
 		})
 		.replace(/<script([^>]*)>([\s\S]*?)<\/script>/ig, function(full, attr, code) {
 			return '<div class="ke-script" data-ke-script-attr="' + escape(attr) + '">' + escape(code) + '</div>';

@@ -14,27 +14,18 @@ KindEditor.plugin('code', function(K) {
 	var self = this, name = 'code';
 	self.clickToolbar(name, function() {
 		var lang = self.lang(name + '.'),
-			html = ['<div style="padding:10px 20px;">',
-				'<div class="ke-dialog-row">',
-				'<select class="ke-code-type">',
-				'<option value="js">JavaScript</option>',
-				'<option value="html">HTML</option>',
-				'<option value="css">CSS</option>',
-				'<option value="php">PHP</option>',
-				'<option value="pl">Perl</option>',
-				'<option value="py">Python</option>',
-				'<option value="rb">Ruby</option>',
-				'<option value="java">Java</option>',
-				'<option value="vb">ASP/VB</option>',
-				'<option value="cpp">C/C++</option>',
-				'<option value="cs">C#</option>',
-				'<option value="xml">XML</option>',
-				'<option value="bsh">Shell</option>',
-				'<option value="">Other</option>',
-				'</select>',
-				'</div>',
-				'<textarea class="ke-textarea" style="width:408px;height:260px;"></textarea>',
-				'</div>'].join(''),
+            html = ['<div style="padding:10px 20px;">',
+                '<div class="ke-dialog-row">',
+                '<select class="ke-code-type">',
+                '<option value="js">JavaScript</option>',
+                '<option value="php">PHP</option>',
+                '<option value="sql">MySQL</option>',
+                '<option value="html">HTML</option>',
+                '<option value="css">CSS</option>',
+                '</select>',
+                '</div>',
+                '<textarea class="ke-textarea" style="width:408px;height:260px;"></textarea>',
+                '</div>'].join(''),
 			dialog = self.createDialog({
 				name : name,
 				width : 450,
@@ -53,7 +44,7 @@ KindEditor.plugin('code', function(K) {
 							return;
 						}
 						self.insertHtml(html).hideDialog().focus();
-						document.getElementsByClassName('ke-edit-iframe')[0].contentWindow.SyntaxHighlighter.highlight();
+                        document.getElementsByClassName('ke-edit-iframe')[0].contentWindow.SyntaxHighlighter.highlight();
 					}
 				}
 			}),
